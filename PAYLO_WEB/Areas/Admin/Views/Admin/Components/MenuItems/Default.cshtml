@@ -1,0 +1,234 @@
+﻿@using PAYLO_Classes.Admin
+@using PAYLO_WEB.Helpers
+@model List<LinksOutput>
+
+@if (Model != null && Model.Count > 0)
+{
+	<div class="sidebar-search-wrapper">
+		<div class="sidebar-search-box">
+			<input type="text" id="menuSearch" class="sidebar-search-input" placeholder="Search Links..." autocomplete="off" />
+			<button type="button" id="clearMenuSearch" class="search-clear-btn" style="display:none;">×</button>
+		</div>
+		<div id="menuSearchResults" class="menu-search-results" style="display:none;"></div>
+	</div>
+
+	<ul class="sidebar-menu" id="normalSidebarMenu">
+		@foreach (var menu in Model.Where(x => x.Parent == 0).OrderBy(x => x.sorting))
+		{
+			<li>
+				<a href="javascript:void(0)" class="menu-link">
+					<span>
+						@if (!string.IsNullOrWhiteSpace(menu.Icon))
+						{
+							<i class="@menu.Icon menu-icon me-2"></i>
+						}
+						else
+						{
+							<i class="ri-folder-line menu-icon me-2"></i>
+						}
+						@menu.LinkName
+					</span>
+					<i class="ri-arrow-down-s-line"></i>
+				</a>
+
+				<ul class="submenu">
+					@foreach (var sub in Model.Where(x => x.Parent == menu.Lid).OrderBy(x => x.sorting))
+					{
+						<li>
+							<a class="sub-item @Html.ActiveClass("Admin", sub.Pagename)" href="/Admin/@sub.Pagename">
+								@sub.LinkName
+							</a>
+						</li>
+					}
+				</ul>
+			</li>
+		}
+	</ul>
+}
+
+
+<style>
+
+	.sidebar-search-wrapper {
+		position: relative;
+		width: 100%;
+		padding: 5px 8px 8px 8px;
+		box-sizing: border-box;
+		z-index: 99999;
+	}
+
+	.sidebar-search-box {
+		position: relative;
+		width: 100%;
+	}
+
+	.sidebar-search-input {
+		width: 100%;
+		height: 28px;
+		padding: 6px 32px 6px 10px;
+		border: 1px solid #b7c8d8;
+		border-radius: 3px;
+		outline: none;
+		font-size: 14px;
+		background: #ffffff;
+		box-sizing: border-box;
+	}
+
+		.sidebar-search-input:focus {
+			border-color: #5b9bd5;
+			box-shadow: 0 0 3px rgba(91, 155, 213, 0.4);
+		}
+
+		.sidebar-search-input::placeholder {
+			color: #888888;
+		}
+
+	.search-clear-btn {
+		position: absolute;
+		right: 8px;
+		top: 50%;
+		transform: translateY(-50%);
+		border: none;
+		background: transparent;
+		color: #e53935;
+		font-size: 20px;
+		line-height: 20px;
+		cursor: pointer;
+		padding: 0;
+		z-index: 10;
+	}
+
+		.search-clear-btn:hover {
+			color: #b71c1c;
+		}
+
+	.menu-search-results {
+		position: absolute;
+		top: 43px;
+		left: 8px;
+		right: 8px;
+		background: #ffffff;
+		border: 1px solid #cccccc;
+		border-radius: 3px;
+		box-shadow: 0 4px 10px rgba(0, 0, 0, 0.20);
+		z-index: 999999;
+		max-height: 300px;
+		overflow-y: auto;
+	}
+
+	.menu-search-result-item {
+		display: block;
+		width: 100%;
+		padding: 9px 10px;
+		color: #333333;
+		text-decoration: none;
+		font-size: 13px;
+		background: #ffffff;
+		border-bottom: 1px solid #eeeeee;
+		box-sizing: border-box;
+		cursor: pointer;
+	}
+
+		.menu-search-result-item:last-child {
+			border-bottom: none;
+		}
+
+		.menu-search-result-item:hover {
+			background: #eeeeee;
+			color: #222222;
+		}
+
+	.menu-search-no-result {
+		padding: 10px;
+		color: #777777;
+		font-size: 13px;
+		background: #ffffff;
+	}
+
+</style>
+
+<script>
+
+	function SearchMenu() {
+
+		const searchInput = document.getElementById("menuSearch");
+		const searchResults = document.getElementById("menuSearchResults");
+		const normalMenu = document.getElementById("normalSidebarMenu");
+		const clearButton = document.getElementById("clearMenuSearch");
+
+		if (!searchInput || !searchResults || !normalMenu || !clearButton) {
+			console.log("Menu search elements not found.");
+			return;
+		}
+
+		searchInput.addEventListener("input", function () {
+
+			const searchText = searchInput.value.trim().toLowerCase();
+			searchResults.innerHTML = "";
+
+			if (searchText === "") {
+
+				searchResults.style.display = "none";
+				normalMenu.style.display = "";
+				clearButton.style.display = "none";
+				return;
+			}
+
+			clearButton.style.display = "block";
+			let resultCount = 0;
+			const menuLinks = normalMenu.querySelectorAll(".sub-item");
+
+			menuLinks.forEach(function (link) {
+
+				const linkName = link.textContent.trim();
+				const linkText = linkName.toLowerCase();
+				const href = link.getAttribute("href");
+
+				if (linkText.includes(searchText)) {
+
+					const resultLink = document.createElement("a");
+					resultLink.className = "menu-search-result-item";
+					resultLink.href = href;
+					resultLink.textContent = linkName;
+					searchResults.appendChild(resultLink);
+					resultCount++;
+				}
+
+			});
+
+		   // normalMenu.style.display = "none";
+
+			if (resultCount === 0) {
+				const noResult = document.createElement("div");
+				noResult.className = "menu-search-no-result";
+				noResult.textContent = "No links found";
+				searchResults.appendChild(
+					noResult
+				);
+			}
+			searchResults.style.display = "block";
+		});
+
+		clearButton.addEventListener("click", function () {
+			searchInput.value = "";
+			searchResults.innerHTML = "";
+			searchResults.style.display = "none";
+			normalMenu.style.display = "";
+			clearButton.style.display = "none";
+			searchInput.focus();
+		});
+
+	}
+
+	if (document.readyState === "loading") {
+
+		document.addEventListener(
+			"DOMContentLoaded",
+			SearchMenu
+		);
+	}
+	else {
+		SearchMenu();
+	}
+
+</script>

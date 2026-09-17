@@ -1,0 +1,153 @@
+﻿@{
+    ViewData["Title"] = "Customer Management";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+
+}
+
+<div class="page-container">
+    <div class="page-header">
+        <div>
+            <h2 class="page-title">Customer Management</h2>
+            <p class="page-subtitle">Manage customer information and documents</p>
+        </div>
+        <button type="button" class="btn-primary" id="btnAddCustomer">
+            <i class="bi bi-plus-lg"></i> Add Customer
+        </button>
+    </div>
+
+    <!-- Customer Form -->
+    <div class="common-card form-card" id="customerFormCard" style="display:none;">
+        <div class="card-header">
+            <div>
+                <h3 class="card-title"><i class="bi bi-person-plus"></i> Customer Information</h3>
+                <p class="card-description">Enter customer personal and document details</p>
+            </div>
+            <button type="button" class="btn-close-card" id="btnCloseForm" aria-label="Close"><i class="bi bi-x-lg"></i></button>
+        </div>
+        <div class="card-body">
+            <form id="customerForm" enctype="multipart/form-data">
+                <input type="hidden" id="customerId" name="customerId" value="0" />
+                <div class="form-grid">
+                    <!-- Name -->
+                    <div class="form-group">
+                        <label for="customerName">Customer Name <span class="required">*</span></label>
+                        <div class="input-wrapper">
+                            <i class="bi bi-person"></i>
+                            <input type="text" id="customerName" name="customerName" class="form-control" maxlength="150" placeholder="Enter customer name" />
+                        </div>
+                        <span class="field-error" id="customerNameError"></span>
+                    </div>
+                    <!-- Mobile -->
+                    <div class="form-group">
+                        <label for="mobileNumber">Mobile Number <span class="required">*</span></label>
+                        <div class="input-wrapper">
+                            <i class="bi bi-phone"></i>
+                            <input type="text" id="mobileNumber" name="mobileNumber" class="form-control" maxlength="10" placeholder="Enter mobile number" />
+                        </div>
+                        <span class="field-error" id="mobileNumberError"></span>
+                    </div>
+                    <!-- Email -->
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <div class="input-wrapper">
+                            <i class="bi bi-envelope"></i>
+                            <input type="email" id="email" name="email" class="form-control" maxlength="150" placeholder="Enter email address" />
+                        </div>
+                        <span class="field-error" id="emailError"></span>
+                    </div>
+                    <!-- Aadhaar -->
+                    <div class="form-group">
+                        <label for="aadhaarNumber">Aadhaar Number</label>
+                        <div class="input-wrapper">
+                            <i class="bi bi-credit-card-2-front"></i>
+                            <input type="text" id="aadhaarNumber" name="aadhaarNumber" class="form-control" maxlength="12" placeholder="Enter Aadhaar number" />
+                        </div>
+                        <span class="field-error" id="aadhaarNumberError"></span>
+                    </div>
+                    <!-- Aadhaar Image -->
+                    <div class="form-group">
+                        <label for="aadhaarImage">Aadhaar Image</label>
+                        <div class="input-wrapper">
+                            <i class="bi bi-file-earmark-image"></i>
+                            <input type="file" id="aadhaarImage" name="aadhaarImage" class="form-control" accept=".jpg,.jpeg,.png" />
+                        </div>
+                        <small class="file-help">JPG, JPEG or PNG only</small>
+                        <div id="aadhaarPreview" class="document-preview"></div>
+                    </div>
+                    <!-- PAN -->
+                    <div class="form-group">
+                        <label for="panNumber">PAN Number</label>
+                        <div class="input-wrapper">
+                            <i class="bi bi-card-text"></i>
+                            <input type="text" id="panNumber" name="panNumber" class="form-control" maxlength="10" placeholder="Enter PAN number" />
+                        </div>
+                        <span class="field-error" id="panNumberError"></span>
+                    </div>
+                    <!-- PAN Image -->
+                    <div class="form-group">
+                        <label for="panImage">PAN Image</label>
+                        <div class="input-wrapper">
+                            <i class="bi bi-file-earmark-image"></i>
+                            <input type="file" id="panImage" name="panImage" class="form-control" accept=".jpg,.jpeg,.png" />
+                        </div>
+                        <small class="file-help">JPG, JPEG or PNG only</small>
+                        <div id="panPreview" class="document-preview"></div>
+                    </div>
+                    <!-- Status -->
+                    <div class="form-group">
+                        <label for="status">Status <span class="required">*</span></label>
+                        <div class="input-wrapper">
+                            <i class="bi bi-check-circle"></i>
+                            <select id="status" name="status" class="form-control">
+                                <option value="Active">Active</option>
+                                <option value="Inactive">Inactive</option>
+                            </select>
+                        </div>
+                        <span class="field-error" id="statusError"></span>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" id="btnCancel"><i class="bi bi-x-circle"></i> Cancel</button>
+                    <button type="submit" class="btn-primary" id="btnSave"><i class="bi bi-check-lg"></i> <span id="btnSaveText">Save Customer</span></button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    @await Component.InvokeAsync("Customers")
+</div>
+
+<!-- Delete Modal -->
+<div class="common-modal-overlay" id="deleteModal" style="display:none;">
+    <div class="common-modal">
+        <div class="modal-icon danger"><i class="bi bi-trash"></i></div>
+        <h3>Delete Customer?</h3>
+        <p>Are you sure you want to delete this customer?</p>
+        <div class="modal-actions">
+            <button type="button" class="btn-secondary" id="btnDeleteCancel">Cancel</button>
+            <button type="button" class="btn-danger" id="btnDeleteConfirm"><i class="bi bi-trash"></i> Delete</button>
+        </div>
+    </div>
+</div>
+
+<!-- Toast -->
+<div id="toast" class="common-toast" role="alert" aria-live="polite">
+    <i class="bi bi-check-circle"></i>
+    <span id="toastMessage">Successfully saved</span>
+</div>
+
+
+@section Scripts
+{
+    <script src="~/js/Masters/Admin_Customers/Customers.js" asp-append-version="true"></script>
+}
+<style>
+    .document-preview img {
+        width: 200px; 
+        height: 120px; 
+        object-fit: cover;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        margin-top: 8px;
+    }
+</style>

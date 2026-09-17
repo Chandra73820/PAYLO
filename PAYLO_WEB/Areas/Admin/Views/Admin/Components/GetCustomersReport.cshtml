@@ -1,0 +1,127 @@
+﻿@using PAYLO_Classes.Admin
+@model IEnumerable<GetCustomers_OP>
+
+<div class="common-card report-card" id="Report">
+    <div class="card-header report-header">
+        <div>
+            <h3 class="card-title"><i class="bi bi-people"></i> Customer Report</h3>
+            <p class="card-description">Search, sort and manage customer records</p>
+        </div>
+    </div>
+
+    <div class="table-toolbar">
+        <div class="search-box">
+            <i class="bi bi-search"></i>
+            <input type="text" id="commonSearch" class="common-search" placeholder="Search customer, mobile, email, PAN..." />
+            <button type="button" class="search-clear" id="btnClearSearch"><i class="bi bi-x"></i></button>
+        </div>
+        <div class="toolbar-right">
+            <div class="filter-box">
+                <i class="bi bi-funnel"></i>
+                <select id="statusFilter" class="common-select">
+                    <option value="">All Status</option>
+                    <option value="Active">Active</option>
+                    <option value="Inactive">Inactive</option>
+                </select>
+            </div>
+            <div class="page-size-box">
+                <span>Show</span>
+                <select id="pageSize" class="page-size-select">
+                    <option value="5">5</option>
+                    <option value="10" selected>10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                </select>
+                <span>entries</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="common-table" id="customerTable">
+            <thead>
+                <tr>
+                    <th width="60">S.No</th>
+                    <th class="sortable" data-column="customerCode">Customer Code <i class="bi bi-arrow-down-up sort-icon"></i></th>
+                    <th class="sortable" data-column="customerName">Customer Name <i class="bi bi-arrow-down-up sort-icon"></i></th>
+                    <th class="sortable" data-column="mobileNumber">Mobile <i class="bi bi-arrow-down-up sort-icon"></i></th>
+                    <th class="sortable" data-column="email">Email <i class="bi bi-arrow-down-up sort-icon"></i></th>
+                    <th>Aadhaar</th>
+                    <th>PAN</th>
+                    <th>Documents</th>
+                    <th class="sortable" data-column="status">Status <i class="bi bi-arrow-down-up sort-icon"></i></th>
+                    <th width="120" class="text-center">Actions</th>
+                </tr>
+            </thead>
+            <tbody id="customerTableBody">
+                @if (Model != null && Model.Any())
+                {
+                    var index = 1;
+                    foreach (var customer in Model)
+                    {
+                        <tr>
+                            <td>@index</td>
+                            <td>@customer.CustomerCode</td>
+                            <td>@customer.CustomerName</td>
+                            <td>@customer.MobileNumber</td>
+                            <td>@customer.Email</td>
+                            <td>@customer.AadhaarNumber</td>
+                            <td>@customer.PANNumber</td>
+                            <td>
+                                @if (!string.IsNullOrEmpty(customer.AadhaarImagePath))
+                                {
+                                    <a href="@customer.AadhaarImagePath" target="_blank">Aadhaar</a>
+                                }
+                                @if (!string.IsNullOrEmpty(customer.PANImagePath))
+                                {
+                                    <a href="@customer.PANImagePath" target="_blank">PAN</a>
+                                }
+                            </td>
+                            @* <td>@customer.Status</td> *@
+                            <td>
+                                <span class="badge @(customer.Status == 0 ? "status-badge status-success" : "status-badge status-failed")">
+                                    @(customer.Status == 0 ? "Active" : "Inactive")
+                                </span>
+                            </td>
+                            <td class="text-center">
+                                <button type="button"
+                                        class="action-btn action-edit"
+                                        onclick="editCustomer(@customer.CustomerID)"
+                                        title="Edit">
+
+                                    <i class="bi bi-pencil"></i>
+
+                                </button>
+
+                                <button type="button"
+                                        class="action-btn action-delete"
+                                        onclick="confirmDelete(@customer.CustomerID)"
+                                        title="Delete">
+
+                                    <i class="bi bi-trash"></i>
+
+                                </button>
+                            </td>
+                        </tr>
+                        index++;
+                    }
+                }
+                else
+                {
+                    <tr><td colspan="9">No customers found</td></tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="no-data" id="noData" style="display:none;">
+        <div class="no-data-icon"><i class="bi bi-inbox"></i></div>
+        <h4>No customers found</h4>
+        <p>No customer records match your search criteria.</p>
+    </div>
+
+    <div class="table-footer">
+        <div class="record-info" id="recordInfo">Showing 0 to 0 of 0 entries</div>
+        <div class="pagination" id="pagination" aria-label="Table pagination"></div>
+    </div>
+</div>
