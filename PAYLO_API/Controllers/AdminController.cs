@@ -1,7 +1,5 @@
-﻿using System.Net;
-using System.Reflection;
+﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using PAYLO_API.Models;
@@ -11,10 +9,8 @@ using PAYLO_Classes;
 using PAYLO_Classes.Admin;
 using PAYLO_Classes.Associate;
 using PAYLO_Classes.Common;
-using PAYLO_Classes.Franchise;
-using PAYLO_Classes.GlobalDB;
-using PAYLO_Classes.Opensite;
 using PAYLO_Dal;
+using System.Security.Claims;
 
 namespace VedalexNepalAPI.Controllers
 {
@@ -37,12 +33,9 @@ namespace VedalexNepalAPI.Controllers
              ITokenService tokenService)
              : base(configuration, errorLogger, hostEnvironment)
         {
-            _tokenService = tokenService
-                ?? throw new ArgumentNullException(nameof(tokenService));
+            _tokenService = tokenService ?? throw new ArgumentNullException(nameof(tokenService));
 
         }
-
-
 
         // ── POST api/Associate/VerifyDistributorLogin ───────────────────────
         [AllowAnonymous]
@@ -53,7 +46,7 @@ namespace VedalexNepalAPI.Controllers
             {
                 model.IPAddress = IpAddress;
                 model.userAgent = UserAgent;
-                string raw = PAYLODAL.Instance.AdminService .AssociateLogin(NapalConEnvironment, model);
+                string raw = PAYLODAL.Instance.AdminService .AssociateLogin(PayloEnvironment, model);
                 var details = JsonConvert.DeserializeObject<LoginResponse>(raw);
 
                 if (string.IsNullOrEmpty(details.ToString()))
@@ -100,8 +93,6 @@ namespace VedalexNepalAPI.Controllers
                 return StatusCode(400, new { ex.Message });
             }
         }
-
-        
 
         [AllowAnonymous]
         [HttpPost("RefreshToken")]
@@ -152,7 +143,7 @@ namespace VedalexNepalAPI.Controllers
 
             // ✅ DAL returns rows affected (count of sessions marked pending)
             int affected = PAYLODAL.Instance.CommonService
-                               .SoftRevoke(NapalConEnvironment, r);
+                               .SoftRevoke(PayloEnvironment, r);
 
             return Ok(new { success = true, affected });
         }
@@ -167,7 +158,7 @@ namespace VedalexNepalAPI.Controllers
                 return Ok(new { success = false });
 
             int affected = PAYLODAL.Instance.CommonService
-                               .CancelSoftRevoke(NapalConEnvironment, r);
+                               .CancelSoftRevoke(PayloEnvironment, r);
 
             return Ok(new { success = true, affected });
         }
@@ -279,7 +270,7 @@ namespace VedalexNepalAPI.Controllers
             try
             {
 
-                List<CommonMessage> _response = PAYLODAL.Instance.AdminService.CreateOrUpdateUser(NapalConEnvironment, encInfo, IpAddress);
+                List<CommonMessage> _response = PAYLODAL.Instance.AdminService.CreateOrUpdateUser(PayloEnvironment, encInfo, IpAddress);
                 if (_response == null)
                 {
                     var _errorDetails = new ErrorDetails(201, "SS", "Invalid credentials");
@@ -297,7 +288,7 @@ namespace VedalexNepalAPI.Controllers
         {
             try
             {
-                List<UserReport_OutPut> _response = PAYLODAL.Instance.AdminService.UsersReport(NapalConEnvironment, encInfo);
+                List<UserReport_OutPut> _response = PAYLODAL.Instance.AdminService.UsersReport(PayloEnvironment, encInfo);
                 if (_response == null)
                 {
                     var _errorDetails = new ErrorDetails(201, "SS", "Invalid credentials");
@@ -315,7 +306,7 @@ namespace VedalexNepalAPI.Controllers
         {
             try
             {
-                string _response = PAYLODAL.Instance.AdminService.LinksPremission(NapalConEnvironment, encInfo);
+                string _response = PAYLODAL.Instance.AdminService.LinksPremission(PayloEnvironment, encInfo);
                 if (_response == null)
                 {
                     var _errorDetails = new ErrorDetails(201, "SS", "Invalid credentials");
@@ -333,7 +324,7 @@ namespace VedalexNepalAPI.Controllers
         {
             try
             {
-                List<Result> _response = PAYLODAL.Instance.AdminService.UpdateLinksPremission(NapalConEnvironment, encInfo);
+                List<Result> _response = PAYLODAL.Instance.AdminService.UpdateLinksPremission(PayloEnvironment, encInfo);
                 if (_response == null)
                 {
                     var _errorDetails = new ErrorDetails(201, "SS", "Invalid credentials");
@@ -353,7 +344,7 @@ namespace VedalexNepalAPI.Controllers
             try
             {
 
-                List<LinksOutput> _adminUsers = PAYLODAL.Instance.CommonService.GetLinks(NapalConEnvironment, obj);
+                List<LinksOutput> _adminUsers = PAYLODAL.Instance.CommonService.GetLinks(PayloEnvironment, obj);
                 if (_adminUsers == null)
                 {
                     var _errorDetails = new ErrorDetails(201, "SS", "Invalid credentials");
@@ -374,7 +365,7 @@ namespace VedalexNepalAPI.Controllers
         {
             try
             {
-                List<GetCustomers_OP> _response = PAYLODAL.Instance.AdminService.GetCustomers(NapalConEnvironment);
+                List<GetCustomers_OP> _response = PAYLODAL.Instance.AdminService.GetCustomers(PayloEnvironment);
                 if (_response == null)
                 {
                     var _errorDetails = new ErrorDetails(201, "SS", "Invalid credentials");
@@ -393,7 +384,7 @@ namespace VedalexNepalAPI.Controllers
             try
             {
                 obj.IPAddress = IpAddress;
-                List<Result> _adminUsers = PAYLODAL.Instance.AdminService.InsertAndUpdateCustomerDetails(NapalConEnvironment, obj);
+                List<Result> _adminUsers = PAYLODAL.Instance.AdminService.InsertAndUpdateCustomerDetails(PayloEnvironment, obj);
 
                 if (_adminUsers == null)
                 {
@@ -407,6 +398,43 @@ namespace VedalexNepalAPI.Controllers
                 return StatusCode(400, ex.Message);
             }
         }
+
+        [AllowAnonymous]
+        [HttpPost("QuickLogin")]
+        public async Task<IActionResult> QuickLogin([FromBody] QuickLoginRequest model)
+        {
+            try
+            {
+                model.IpAddress = HttpContext.Connection.RemoteIpAddress?.ToString() ?? "::1";
+                model.UserAgent = Request.Headers.UserAgent.ToString();
+
+                string raw = PAYLODAL.Instance.AdminService.QuickLogin(PayloEnvironment, model);
+                var details = JsonConvert.DeserializeObject<LoginResponse>(raw);
+
+                if (details == null || details.RegID <= 0)
+                    return Unauthorized(new { StatusCode = 401, Message = "Quick login failed" });
+
+                if (details.Msg is not ("Success" or "POPSUCCESS"))
+                    return Ok(details);
+
+                // Issue token pair
+                var tokenPair = await _tokenService.IssueTokenPairAsync(
+                    details.MemberID, details.RegID, details.Name!, "Customer", model.IpAddress, model.UserAgent);
+
+                details.accessToken = tokenPair.AccessToken;
+                details.accessTokenExpiry = tokenPair.AccessTokenExpiry?.ToString("o") ?? "";
+                details.sessionId = tokenPair.MultiSessionId;
+                details.RefreshToken = tokenPair.RawRefreshToken;
+                details.RefreshTokenExpiry = tokenPair.RefreshTokenExpiry.ToString("o") ?? "";
+
+                return Ok(details);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(400, new { ex.Message });
+            }
+        }
+
+
     }
 }
-//Sai

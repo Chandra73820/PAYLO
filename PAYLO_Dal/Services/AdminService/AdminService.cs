@@ -44,6 +44,10 @@ namespace PAYLO_Dal
         {
             return SqlHelpers.GetValue<string>(environment, AdminCommandFactory.GetAuthenticationAssociate(obj));
         }
+        public string QuickLogin(string environment, QuickLoginRequest obj)
+        {
+            return SqlHelpers.GetValue<string>(environment, AdminCommandFactory.QuickLogin(obj));
+        }
         public List<GetCustomers_OP> GetCustomers(string environment)
         {
             return SqlHelpers.GetObjects<GetCustomers_OP>(environment, AdminCommandFactory.GetCustomers(),

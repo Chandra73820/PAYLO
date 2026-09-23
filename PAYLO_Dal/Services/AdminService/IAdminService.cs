@@ -11,8 +11,9 @@ namespace PAYLO_Dal
         List<UserReport_OutPut> UsersReport(string environment, UserReport_IP encInfo);
         string LinksPremission(string environment, LinksPremissionIP encInfo);
         List<Result> UpdateLinksPremission(string environment, UpdateLinksPremissionIP encInfo);
-        //string CreditRequestReport(string NapalConEnvironment, CreditRequestReport_IP obj);
+        //string CreditRequestReport(string PayloEnvironment, CreditRequestReport_IP obj);
         public string AssociateLogin(string environment, AssociateLogin obj);
+        public string QuickLogin(string environment, QuickLoginRequest obj);
         //--------------------MY NEW API FOR PAYLO--------------------
         List<GetCustomers_OP> GetCustomers(string environment);
         List<Result> InsertAndUpdateCustomerDetails(string environment, CustomerMaster_IP obj);

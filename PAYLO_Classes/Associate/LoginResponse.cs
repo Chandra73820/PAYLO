@@ -11,8 +11,10 @@ namespace PAYLO_Classes.Associate
     {
 
 
+        public int CustomerID { get; set; }
         public int RegID { get; set; }
         public string MemberID { get; set; }
+        public string CustomerCode { get; set; }
         public string Name { get; set; }
         public string Msg { get; set; }
         public string? accessToken { get; set; }

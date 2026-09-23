@@ -21,12 +21,12 @@ namespace PAYLO_Dal
         List<DropDownDetails_OP> GetDropDown(string environment, GetDropDown_IP obj);
         string GetDropDownText(string environment, GetDropDown_IP obj);
         List<CheckUserID_OutPut> CheckUserID(string environment, CheckUserID_IP encInfo);
-        string MemberAddress(string NapalConEnvironment, MemberAddress_IP obj);
-        string GetReceipt(string NapalConEnvironment, GetReceiptIP obj);
+        string MemberAddress(string PayloEnvironment, MemberAddress_IP obj);
+        string GetReceipt(string PayloEnvironment, GetReceiptIP obj);
 
-        int RevokePendingAsync(string NapalConEnvironment);
-        int SoftRevoke(string NapalConEnvironment,SessionRef Obj);
+        int RevokePendingAsync(string PayloEnvironment);
+        int SoftRevoke(string PayloEnvironment,SessionRef Obj);
         int CancelSoftRevoke(string environment, SessionRef obj);
-        string UserIDChangeFromIndia(string NapalConEnvironment, UserIDChangeFromIndia_IP obj);
+        string UserIDChangeFromIndia(string PayloEnvironment, UserIDChangeFromIndia_IP obj);
     }
 }
