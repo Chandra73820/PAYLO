@@ -19,7 +19,17 @@ namespace PAYLO_Dal.CommandFactories
             };
             return CreateCommand("AdminLogin_Sp", parameters);
         }
+        internal static SqlCommand QuickLogin(QuickLoginRequest obj)
+        {
 
+            var parameters = new[]
+            {
+                CreateParameter("@CustomerCode", SqlDbType.VarChar,obj.CustomerCode),
+                CreateParameter("@Password", SqlDbType.VarChar, obj.Password),
+               
+            };
+            return CreateCommand("Usp_QuickLogin", parameters);
+        }
         internal static SqlCommand UpdateLinksPremission(UpdateLinksPremissionIP cInfo)
         {
             var parameters = new[]
@@ -61,10 +71,9 @@ namespace PAYLO_Dal.CommandFactories
         {
             var parameters = new[]
             {
-        CreateParameter("@Action", SqlDbType.VarChar, obj.Action),
-        CreateParameter("@Id", SqlDbType.VarChar, obj.Id),
-        //CreateParameter("@type", SqlDbType.VarChar, obj.type),
-    };
+                CreateParameter("@Action", SqlDbType.VarChar, obj.Action),
+                CreateParameter("@Id", SqlDbType.VarChar, obj.Id),
+            };
             return CreateCommand("GetLinks_SP", parameters);
         }
         internal static SqlCommand CreateOrUpdateUser(UserCreation_IP cInfo, string IpAddress)
@@ -109,6 +118,7 @@ namespace PAYLO_Dal.CommandFactories
                 CreateParameter("@AadhaarImagePath", SqlDbType.VarChar, obj.AadhaarImagePath),
                 CreateParameter("@PANNumber", SqlDbType.VarChar, obj.PANNumber),
                 CreateParameter("@PANImagePath", SqlDbType.VarChar, obj.PANImagePath),
+                CreateParameter("@Password", SqlDbType.VarChar, obj.Password ),
                 CreateParameter("@Status", SqlDbType.Int, obj.Status),
                 CreateParameter("@CreatedBy", SqlDbType.Int, obj.CreatedBy),
                 CreateParameter("@IPAddress", SqlDbType.VarChar, obj.IPAddress),

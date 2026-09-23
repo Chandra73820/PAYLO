@@ -50,7 +50,7 @@ namespace VedalexNepalAPI.Controllers
         {
             try
             {
-                List<DropDownDetails_OP> result = PAYLODAL.Instance.CommonService.GetDropDown(NapalConEnvironment, encInfo);
+                List<DropDownDetails_OP> result = PAYLODAL.Instance.CommonService.GetDropDown(PayloEnvironment, encInfo);
                 if (result == null)
                 {
                     var _errorDetails = new ErrorDetails(201, "SS", "Invalid credentials");
@@ -71,7 +71,7 @@ namespace VedalexNepalAPI.Controllers
         {
             try
             {
-               string result = PAYLODAL.Instance.CommonService.GetDropDownText(NapalConEnvironment, encInfo);
+               string result = PAYLODAL.Instance.CommonService.GetDropDownText(PayloEnvironment, encInfo);
 
                 if (result == null)
                 {
@@ -93,7 +93,7 @@ namespace VedalexNepalAPI.Controllers
         {
             try
             {
-                List<CheckUserID_OutPut> result = PAYLODAL.Instance.CommonService.CheckUserID(NapalConEnvironment, encInfo);
+                List<CheckUserID_OutPut> result = PAYLODAL.Instance.CommonService.CheckUserID(PayloEnvironment, encInfo);
                 if (result == null)
                 {
                     var _errorDetails = new ErrorDetails(201, "SS", "Invalid credentials");
@@ -113,7 +113,7 @@ namespace VedalexNepalAPI.Controllers
         {
             try
             {
-                string response = PAYLODAL.Instance.CommonService.MemberAddress(NapalConEnvironment, obj);
+                string response = PAYLODAL.Instance.CommonService.MemberAddress(PayloEnvironment, obj);
 
                 if (response == null)
                 {
@@ -134,7 +134,7 @@ namespace VedalexNepalAPI.Controllers
         {
             try
             {
-                string response = PAYLODAL.Instance.CommonService.GetReceipt(NapalConEnvironment, obj);
+                string response = PAYLODAL.Instance.CommonService.GetReceipt(PayloEnvironment, obj);
 
                 if (response == null)
                 {
@@ -155,7 +155,7 @@ namespace VedalexNepalAPI.Controllers
         {
             try
             {
-                string response = PAYLODAL.Instance.CommonService.UserIDChangeFromIndia(NapalConEnvironment, obj);
+                string response = PAYLODAL.Instance.CommonService.UserIDChangeFromIndia(PayloEnvironment, obj);
 
                 if (string.IsNullOrWhiteSpace(response))
                 {

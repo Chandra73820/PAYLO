@@ -16,7 +16,7 @@ namespace VedalexNepalAPI.Controllers
         protected readonly string _GBLConEnvironment;
         protected readonly string _XAPIKey;
         protected readonly string _XAPIKeyHeaderName;
-        protected readonly string _NapalConEnvironment;
+        protected readonly string _PayloEnvironment;
         protected readonly string _XCorrelationIdHeaderName;
         protected readonly string JsonContentType;
        // protected string IpAddress;
@@ -26,7 +26,7 @@ namespace VedalexNepalAPI.Controllers
             Configuration = configuration;
             ErrorLogger = errorLogger;
             _env = env;
-            _NapalConEnvironment = configuration.GetValue<string>("Environment");
+            _PayloEnvironment = configuration.GetValue<string>("Environment");
             _GBLConEnvironment = configuration.GetValue<string>("GBLEnvironment");
             _XAPIKey = configuration?.GetValue<string>("ApiSettings:GlobalApiKey") ?? "GBL-SEC-2026-VEDALEX";
             _XAPIKeyHeaderName = configuration?.GetValue<string>("ApiSettings:ApiKeyHeaderName") ?? "X-API-Key";
@@ -35,7 +35,7 @@ namespace VedalexNepalAPI.Controllers
            // IpAddress = GetClientIp();
         }
 
-        protected string NapalConEnvironment => _NapalConEnvironment;
+        protected string PayloEnvironment => _PayloEnvironment;
         protected string GBLConEnvironment => _GBLConEnvironment;
         protected string XAPIKey => _XAPIKey;
         protected string XAPIKeyHeaderName => _XAPIKeyHeaderName;

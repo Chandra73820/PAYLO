@@ -47,7 +47,7 @@ namespace VedalexNepalAPI.Controllers
         {
             try
             {
-                string result = PAYLODAL.Instance.DistributorService.VerifyDistributorLogin(NapalConEnvironment, model);
+                string result = PAYLODAL.Instance.DistributorService.VerifyDistributorLogin(PayloEnvironment, model);
 
                 var details = JsonConvert.DeserializeObject<LoginResponse>(result);
 
@@ -148,7 +148,7 @@ namespace VedalexNepalAPI.Controllers
                 //obj.RegID = int.Parse(User.FindFirst("RegID")?.Value ?? "0");
 
                 var result = PAYLODAL.Instance.CommonService
-                                 .GetLinks(NapalConEnvironment, obj);
+                                 .GetLinks(PayloEnvironment, obj);
 
                 // Always return array — never return null (causes object deserialization error)
                 return Ok(result ?? new List<LinksOutput>());
@@ -275,7 +275,7 @@ namespace VedalexNepalAPI.Controllers
         {
             try
             {
-                string response = PAYLODAL.Instance.DistributorService.MemberDashboard(NapalConEnvironment, obj);
+                string response = PAYLODAL.Instance.DistributorService.MemberDashboard(PayloEnvironment, obj);
 
                 if (string.IsNullOrEmpty(response))
                 {
@@ -298,7 +298,7 @@ namespace VedalexNepalAPI.Controllers
         {
             try
             {
-                string result = PAYLODAL.Instance.DistributorService.Signup(NapalConEnvironment, obj);
+                string result = PAYLODAL.Instance.DistributorService.Signup(PayloEnvironment, obj);
                 if (result == null)
                 {
                     return NotFound();
@@ -320,7 +320,7 @@ namespace VedalexNepalAPI.Controllers
         {
             try
             {
-                string result = PAYLODAL.Instance.DistributorService.PincodeCheck(NapalConEnvironment, obj);
+                string result = PAYLODAL.Instance.DistributorService.PincodeCheck(PayloEnvironment, obj);
                 if (result == null)
                 {
                     return NotFound();
@@ -342,7 +342,7 @@ namespace VedalexNepalAPI.Controllers
         {
             try
             {
-                string result = PAYLODAL.Instance.DistributorService.CheckUserInfo(NapalConEnvironment, obj);
+                string result = PAYLODAL.Instance.DistributorService.CheckUserInfo(PayloEnvironment, obj);
                 if (result == null)
                 {
                     return NotFound();
@@ -364,7 +364,7 @@ namespace VedalexNepalAPI.Controllers
         {
             try
             {
-                string result = PAYLODAL.Instance.DistributorService.SendOTP(NapalConEnvironment, obj);
+                string result = PAYLODAL.Instance.DistributorService.SendOTP(PayloEnvironment, obj);
                 if (result == null)
                 {
                     return NotFound();
@@ -401,7 +401,7 @@ namespace VedalexNepalAPI.Controllers
             try
             {
 
-                List<MemberProfile_OutPut> _adminUsers = PAYLODAL.Instance.DistributorService.MemberProfile(NapalConEnvironment, encInfo);
+                List<MemberProfile_OutPut> _adminUsers = PAYLODAL.Instance.DistributorService.MemberProfile(PayloEnvironment, encInfo);
                 if (_adminUsers == null)
                 {
                     var _errorDetails = new ErrorDetails(201, "SS", "Invalid credentials");
@@ -423,7 +423,7 @@ namespace VedalexNepalAPI.Controllers
         {
             try
             {
-                string response = PAYLODAL.Instance.DistributorService.GetCitizenshipStatus(NapalConEnvironment,obj);
+                string response = PAYLODAL.Instance.DistributorService.GetCitizenshipStatus(PayloEnvironment,obj);
                 if (response == null)
                 {
                     var _errorDetails = new ErrorDetails(201, "SS", "Invalid credentials");
@@ -443,7 +443,7 @@ namespace VedalexNepalAPI.Controllers
         {
             try
             {
-                string response =PAYLODAL.Instance.DistributorService.UploadCitizenshipRequest(NapalConEnvironment,obj);
+                string response =PAYLODAL.Instance.DistributorService.UploadCitizenshipRequest(PayloEnvironment,obj);
 
                 if (response == null)
                 {
@@ -464,7 +464,7 @@ namespace VedalexNepalAPI.Controllers
         {
             try
             {
-                string response = PAYLODAL.Instance.DistributorService.UploadBankDetails(NapalConEnvironment, obj);
+                string response = PAYLODAL.Instance.DistributorService.UploadBankDetails(PayloEnvironment, obj);
 
                 if (response == null)
                 {
@@ -485,7 +485,7 @@ namespace VedalexNepalAPI.Controllers
         {
             try
             {
-                string response = PAYLODAL.Instance.DistributorService.UploadPANDetails(NapalConEnvironment, obj);
+                string response = PAYLODAL.Instance.DistributorService.UploadPANDetails(PayloEnvironment, obj);
 
                 if (response == null)
                 {
@@ -506,7 +506,7 @@ namespace VedalexNepalAPI.Controllers
         {
             try
             {
-                string response = PAYLODAL.Instance.DistributorService.UploadMemberPhoto(NapalConEnvironment,obj);
+                string response = PAYLODAL.Instance.DistributorService.UploadMemberPhoto(PayloEnvironment,obj);
 
                 if (response == null)
                 {
@@ -527,7 +527,7 @@ namespace VedalexNepalAPI.Controllers
         {
             try
             {
-                string result = PAYLODAL.Instance.DistributorService.ForgotPassword(NapalConEnvironment, obj);
+                string result = PAYLODAL.Instance.DistributorService.ForgotPassword(PayloEnvironment, obj);
                 if (result == null)
                 {
                     return NotFound();

@@ -15,7 +15,7 @@ namespace PAYLO_Classes.Admin
         public int Status { get; set; }
         public int? CreatedBy { get; set; }
         public DateTime? CreatedDate { get; set; }
-
+        public string Password { get; set; }
     }
 
     public class CustomerMaster_IP : Session_IPAdd
@@ -30,6 +30,7 @@ namespace PAYLO_Classes.Admin
         public string PANImagePath { get; set; }
         public string AadhaarImage { get; set; }
         public string PanImage { get; set; }
+        public string Password { get; set; }
         public int CreatedBy { get; set; }
         public int UpdatedBy { get; set; }
     }

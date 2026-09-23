@@ -531,6 +531,7 @@ namespace PAYLO_Dal.ItemFactories
             customer.PANNumber = reader["PANNumber"] as string;
             customer.PANImagePath = reader["PANImagePath"] as string;
             customer.CustomerCode = reader["CustomerCode"] as string;
+            customer.Password = reader["Password"] as string;
             customer.Status = (int)reader["Status"];
 
             if (Convert.IsDBNull(reader["CreatedDate"]))

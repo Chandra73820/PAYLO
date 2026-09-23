@@ -27,7 +27,7 @@ namespace VedalexNepalAPI.Controllers
         {
             try
             {
-                string response = PAYLODAL.Instance.OpenService.ProductDetails(NapalConEnvironment, obj);
+                string response = PAYLODAL.Instance.OpenService.ProductDetails(PayloEnvironment, obj);
                 if (response == null)
                 {
                     var _errorDetails = new ErrorDetails(201, "SS", "Invalid credentials");
@@ -48,7 +48,7 @@ namespace VedalexNepalAPI.Controllers
             {
                 obj.IPAddress = IpAddress;
 
-                string response = PAYLODAL.Instance.OpenService.ContactUs(NapalConEnvironment, obj);
+                string response = PAYLODAL.Instance.OpenService.ContactUs(PayloEnvironment, obj);
                 if (response == null)
                 {
                     var errorDetails = new ErrorDetails(201, "SS", "Invalid credentials");
@@ -66,7 +66,7 @@ namespace VedalexNepalAPI.Controllers
         {
             try
             {
-                string response = PAYLODAL.Instance.OpenService.TestimonialDetails(NapalConEnvironment, obj);
+                string response = PAYLODAL.Instance.OpenService.TestimonialDetails(PayloEnvironment, obj);
                 if (response == null)
                 {
                     var _errorDetails = new ErrorDetails(201, "SS", "Invalid credentials");
